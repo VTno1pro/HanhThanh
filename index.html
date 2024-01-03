@@ -27,8 +27,8 @@
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">Lịch trình</a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#families">Gia đình 2 bên</a></li>
+                        <li class="nav-item"><a  href="#about" class="nav-link js-scroll-trigger" >Lịch trình</a></li>
+                        <li class="nav-item"><a href="#families" class="nav-link js-scroll-trigger" >Gia đình 2 bên</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#album">Album Ảnh</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#qr-code">QR-Code</a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Hướng dẫn di chuyển</a></li>
@@ -69,6 +69,26 @@
                         <hr class="divider light my-4" />
                         <p class="text-white-50 mb-4">Start Bootstrap has everything you need to get your new website up and running in no time! Choose one of our open source, free to download, and easy to use themes! No strings attached!</p>
                         <a class="btn btn-light btn-xl js-scroll-trigger" href="#services">Get Started!</a>
+                    <div>
+                        <div id="clockdiv">
+                            <div>
+                              <span class="days"></span>
+                              <div class="smalltext">Days</div>
+                            </div>
+                            <div>
+                              <span class="hours"></span>
+                              <div class="smalltext">Hours</div>
+                            </div>
+                            <div>
+                              <span class="minutes"></span>
+                              <div class="smalltext">Minutes</div>
+                            </div>
+                            <div>
+                              <span class="seconds"></span>
+                              <div class="smalltext">Seconds</div>
+                            </div>
+                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,6 +228,7 @@
                 <div class="small text-center text-muted">Thanh & Hạnh Weeding</div>
                 <div class="small text-center text-muted">Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng tôi</div>
             </div>
+            <div class="countdown-time" data-time="February 25, 2024 11:30" data-id="964"></div>
         </footer>
         <!-- Bootstrap core JS-->
         <script src="js/jquery.min.js"></script>
@@ -218,5 +239,102 @@
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
         <script src="js/lightbox-plus-jquery.min.js"></script>
+        <script>
+            "use strict";
+            function getTimeRemaining(endtime) {
+                var t =  new Date(''+endtime+'').getTime() - new Date().getTime();
+                var seconds = Math.floor((t / 1000) % 60);
+                var minutes = Math.floor((t / 1000 / 60) % 60);
+                var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+                var days = Math.floor(t / (1000 * 60 * 60 * 24));
+                return {
+                    'total': t,
+                    'days': days,
+                    'hours': hours,
+                    'minutes': minutes,
+                    'seconds': seconds
+                };
+                }
+
+                function initializeClock(id, endtime) {
+                // var clock = document.getElementById(id);
+                // var daysSpan = clock.querySelector('.days');
+                // var hoursSpan = clock.querySelector('.hours');
+                // var minutesSpan = clock.querySelector('.minutes');
+                // var secondsSpan = clock.querySelector('.seconds');
+
+                function updateClock() {
+                    var t = getTimeRemaining(endtime);
+                    var countDownDate = new Date(''+endtime+'').getTime();
+                    // daysSpan.innerHTML = t.days;
+                    // hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+                    // minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+                    // secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+                     $(".days").html( t.days);
+                     $(".hours").html(('0' + t.hours).slice(-2));
+                     $(".minutes").html(('0' + t.minutes).slice(-2));
+                     $(".seconds").html(('0' + t.seconds).slice(-2));
+
+                    if (t.total <= 0) {
+                    clearInterval(timeinterval);
+                    }
+                }
+
+                updateClock();
+                var timeinterval = setInterval(updateClock, 1000);
+                }
+
+                var deadline = new Date('2024-01-21 4:00:00 PM');
+                initializeClock('clockdiv', deadline);
+        </script>
+
+        <script>
+            var lastId,
+        topMenu = $("#navbarResponsive"),
+        topMenuHeight = topMenu.outerHeight()+1,
+        // All list items
+        menuItems = topMenu.find("a"),
+        // Anchors corresponding to menu items
+        scrollItems = menuItems.map(function(){
+        var item = $($(this).attr("href"));
+            if (item.length) { return item; }
+        });
+
+        // Bind click handler to menu items
+        // so we can get a fancy scroll animation
+        menuItems.click(function(e){
+        var href = $(this).attr("href"),
+            offsetTop = href === "#" ? 0 : $(href).offset().top-topMenuHeight+1;
+        $('html, body').stop().animate({ 
+            scrollTop: offsetTop
+        }, 850);
+        e.preventDefault();
+        });
+
+        // Bind to scroll
+        $(window).scroll(function(){
+        // Get container scroll position
+        var fromTop = $(this).scrollTop()+topMenuHeight;
+        
+        // Get id of current scroll item
+        var cur = scrollItems.map(function(){
+            if ($(this).offset().top < fromTop)
+            return this;
+        });
+        // Get the id of the current element
+        cur = cur[cur.length-1];
+        var id = cur && cur.length ? cur[0].id : "";
+        
+        if (lastId !== id) {
+            lastId = id;
+            console.log(menuItems);
+            // Set/remove active class
+            menuItems
+                .parent().removeClass("active")
+                .end().filter("[href=#"+id+"]").parent().addClass("active");
+        }                   
+        });
+
+        </script>
     </body>
 </html>
